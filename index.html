@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С Днём Рождения, Мама! 🌹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>С Днём Рождения, Мама! ✨</title>
     <style>
         /* =============================================
-           СБРОС ОТСТУПОВ
+           БАЗА
            ============================================= */
         * {
             margin: 0;
@@ -14,60 +14,78 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Georgia', 'Times New Roman', serif;
+        html, body {
+            height: 100%;
             min-height: 100vh;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #f5eee8;
             padding: 20px;
-            overflow: hidden;
-            background-image: url('https://i.pinimg.com/736x/6f/31/a0/6f31a05b7731aa34841df1054ad7a152.jpg');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at 20% 30%, #2c1e1a, #1a1210);
             background-attachment: fixed;
+            min-height: 100vh;
+            min-height: 100dvh; /* для мобильных браузеров */
+            overflow-x: hidden;
         }
 
         /* =============================================
-           КОНТЕЙНЕР-КНИГА
+           КОНТЕЙНЕР
            ============================================= */
         .book {
-            max-width: 480px;
+            max-width: 440px;
             width: 100%;
             perspective: 1500px;
             position: relative;
+            padding-bottom: 20px;
         }
 
         /* =============================================
-           СТРАНИЦЫ (ОБЩИЕ СТИЛИ)
+           СТРАНИЦЫ — ЖИДКОЕ СТЕКЛО (Liquid Glass)
            ============================================= */
         .page {
-            background: rgba(255, 250, 240, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 35px 25px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25),
-                        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px) saturate(1.5);
+            -webkit-backdrop-filter: blur(40px) saturate(1.5);
+            border-radius: 48px;
+            padding: 32px 24px;
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                0 0 60px rgba(255, 215, 190, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transform-style: preserve-3d;
-            transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1),
-                        opacity 0.5s ease;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        opacity 0.6s ease;
             opacity: 0;
-            transform: rotateY(15deg) scale(0.95);
+            transform: rotateY(8deg) scale(0.96);
             pointer-events: none;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            min-height: 600px;
+            min-height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            border: 1px solid rgba(255, 215, 190, 0.3);
-            backface-visibility: hidden;
+            background-image:
+                radial-gradient(
+                    circle at 20% 30%,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    transparent 55%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(255, 215, 190, 0.05) 0%,
+                    transparent 50%
+                );
+            /* Защита от перекрытия */
+            margin-bottom: 20px;
         }
 
         .page.active {
@@ -78,76 +96,188 @@
         }
 
         /* =============================================
-           ПЕРВАЯ СТРАНИЦА (письмо)
+           СТРАНИЦА 1: КОНВЕРТ
            ============================================= */
+        .envelope {
+            width: 140px;
+            height: 100px;
+            background: rgba(255, 248, 240, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 24px;
+            transition: transform 0.6s ease, opacity 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 215, 190, 0.1);
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(255, 248, 240, 0.05);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            border: 1px solid rgba(255, 215, 190, 0.08);
+            border-bottom: none;
+        }
+
+        .envelope .seal {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 215, 190, 0.4), rgba(212, 175, 55, 0.2));
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            z-index: 2;
+        }
+
+        .envelope.open {
+            transform: rotateX(180deg) scale(1.02);
+        }
+
         .page-letter .letter-icon {
-            font-size: 72px;
-            margin-bottom: 20px;
+            font-size: 48px;
+            margin-bottom: 12px;
             animation: pulse 2.5s ease-in-out infinite;
         }
 
         .page-letter h2 {
-            font-size: 32px;
-            color: #5a3d35;
-            margin-bottom: 20px;
-            font-weight: 400;
-            letter-spacing: 1.5px;
+            font-size: 28px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
         }
 
         .page-letter .typewriter-text {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #4e342e;
-            max-width: 380px;
-            margin: 0 auto 30px;
-            min-height: 90px;
-            font-family: 'Georgia', serif;
-        }
-
-        .page-letter .btn-next {
-            background: linear-gradient(145deg, #e8c9b0, #dbb594);
-            color: #4a2e26;
-            border: none;
-            padding: 18px 48px;
-            border-radius: 60px;
-            font-size: 22px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(190, 140, 110, 0.3);
-            font-family: inherit;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .page-letter .btn-next:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(190, 140, 110, 0.4);
-            background: linear-gradient(145deg, #f0d5bc, #e0c0a5);
+            font-size: 16px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 340px;
+            margin: 0 auto 24px;
+            min-height: 70px;
+            font-weight: 400;
         }
 
         /* =============================================
-           ВТОРАЯ СТРАНИЦА (открытка)
+           КНОПКИ В СТИЛЕ APPLE
            ============================================= */
-        .page-greeting h1 {
-            font-size: 26px;
-            color: #6d4c41;
-            margin-bottom: 15px;
+        .apple-btn {
+            display: inline-block;
+            padding: 16px 44px;
+            border-radius: 60px;
+            font-size: 18px;
             font-weight: 600;
-            letter-spacing: 1px;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-decoration: none;
+            background: #ffffff;
+            color: #1a1210;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* --- КОНТЕЙНЕР ДЛЯ ВИДЕО 9:16 --- */
+        .apple-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.15);
+            background: #f5f5f7;
+        }
+
+        .apple-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+            transition-duration: 0.08s;
+        }
+
+        .apple-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(255, 255, 255, 0.25) 0%,
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .apple-btn:hover::after {
+            opacity: 1;
+        }
+
+        .apple-btn-outline {
+            display: inline-block;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-decoration: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .apple-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.03);
+        }
+
+        .apple-btn-outline:active {
+            transform: scale(0.96);
+        }
+
+        /* =============================================
+           СТРАНИЦА 2: ОТКРЫТКА
+           ============================================= */
+        .page-greeting h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
         .video-wrapper {
             width: 100%;
-            max-width: 300px;
+            max-width: 220px;
             aspect-ratio: 9 / 16;
-            margin: 10px auto 20px;
-            border-radius: 24px;
+            margin: 8px auto 14px;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2),
-                        0 0 0 3px rgba(255, 255, 255, 0.5) inset;
-            background: #f0e8e0;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            background: rgba(0, 0, 0, 0.2);
             position: relative;
         }
 
@@ -158,114 +288,218 @@
             display: block;
         }
 
+        .candle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 4px 0 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .candle-container:hover {
+            transform: scale(1.02);
+        }
+
+        .candle {
+            width: 18px;
+            height: 44px;
+            background: linear-gradient(180deg, #f5e6d3, #dcc0b0);
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .candle .wick {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background: #3e2723;
+        }
+
+        .candle .flame {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 18px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 30px rgba(255, 200, 0, 0.3);
+            transition: all 0.5s ease;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(0.9) rotate(2deg); opacity: 0.8; }
+        }
+
+        .candle .flame.out {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.2);
+            box-shadow: none;
+        }
+
+        .candle-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .wish-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffd700;
+            margin: 4px 0 10px;
+            min-height: 30px;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .wish-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .page-greeting .greeting-text {
-            font-size: 17px;
-            line-height: 1.8;
-            color: #4e342e;
-            max-width: 400px;
-            margin: 0 auto 20px;
-            min-height: 80px;
-            font-family: 'Georgia', serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 340px;
+            margin: 0 auto 12px;
+            min-height: 50px;
+            font-weight: 400;
         }
 
         .page-greeting .greeting-text strong {
-            color: #b56576;
+            color: rgba(255, 215, 190, 0.9);
         }
 
         /* =============================================
-           ПЛЕЕР В СТИЛЕ APPLE MUSIC / SPOTIFY
+           ПЛЕЕР + ИНФОРМАЦИЯ О ПЕСНЕ
            ============================================= */
         .audio-player {
             display: flex;
             align-items: center;
-            gap: 16px;
-            background: rgba(255, 248, 240, 0.7);
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            padding: 8px 18px 8px 12px;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 14px 6px 8px;
+            border-radius: 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
+            max-width: 300px;
+            margin: 0 auto 6px;
+        }
+
+        .audio-player .cover {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .audio-player .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .audio-player .cover.spin {
+            animation: spin 6s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .audio-player button {
-            background: #e8ddd0;
+            background: rgba(255, 255, 255, 0.06);
             border: none;
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            font-size: 22px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .audio-player button:hover {
-            background: #dccfc0;
+            background: rgba(255, 255, 255, 0.12);
             transform: scale(1.04);
         }
 
         .audio-player .player-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex: 1;
         }
 
         .audio-player .progress-bar {
             flex: 1;
-            height: 4px;
-            background: rgba(100, 70, 60, 0.15);
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 4px;
             cursor: pointer;
             position: relative;
-            min-width: 60px;
+            min-width: 40px;
         }
 
         .audio-player .progress-bar .progress-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #c9a58b, #b5856a);
+            background: linear-gradient(90deg, #ffd700, #ffb347);
             border-radius: 4px;
             transition: width 0.1s linear;
         }
 
         .audio-player .time {
-            font-size: 13px;
-            color: #7a5a4a;
-            min-width: 38px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            min-width: 30px;
             font-variant-numeric: tabular-nums;
-            font-family: 'Georgia', serif;
+            font-weight: 400;
         }
 
-        /* =============================================
-           КНОПКА "ОТКРЫТЬ С НАЧАЛА"
-           ============================================= */
-        .restart-btn {
-            background: rgba(200, 170, 150, 0.2);
-            color: #5a3d35;
-            border: 1px solid rgba(200, 170, 150, 0.3);
-            padding: 12px 32px;
-            border-radius: 50px;
-            font-size: 16px;
+        /* ===== ИНФОРМАЦИЯ О ПЕСНЕ (название + исполнитель) ===== */
+        .track-info {
+            text-align: center;
+            margin: 4px 0 10px;
+        }
+
+        .track-info .track-name {
+            font-size: 15px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            backdrop-filter: blur(4px);
-            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: -0.01em;
         }
 
-        .restart-btn:hover {
-            background: rgba(200, 170, 150, 0.35);
-            transform: translateY(-2px);
+        .track-info .track-artist {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 2px;
         }
 
         /* =============================================
@@ -280,27 +514,72 @@
            АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ
            ============================================= */
         @media (max-width: 480px) {
-            .page {
-                padding: 25px 18px;
-                min-height: 500px;
-                border-radius: 24px;
+            body {
+                padding: 12px;
+                align-items: center;
             }
-            .page-letter h2 { font-size: 26px; }
-            .page-letter .typewriter-text { font-size: 16px; }
-            .page-greeting h1 { font-size: 22px; }
-            .page-greeting .greeting-text { font-size: 15px; }
-            .video-wrapper { max-width: 220px; }
-            .audio-player { padding: 6px 14px 6px 10px; }
-            .audio-player button { width: 38px; height: 38px; font-size: 18px; }
+
+            .page {
+                padding: 24px 16px;
+                min-height: 420px;
+                border-radius: 32px;
+                margin-bottom: 16px;
+            }
+
+            .page-letter h2 { font-size: 24px; }
+            .page-letter .typewriter-text { font-size: 15px; }
+            .page-greeting h1 { font-size: 20px; }
+            .page-greeting .greeting-text { font-size: 14px; }
+            .video-wrapper { max-width: 180px; }
+
+            .audio-player { padding: 4px 10px 4px 6px; }
+            .audio-player button { width: 32px; height: 32px; font-size: 15px; }
+            .audio-player .cover { width: 30px; height: 30px; }
+
+            .envelope { width: 110px; height: 80px; }
+
+            .apple-btn { padding: 14px 32px; font-size: 16px; }
+            .apple-btn-outline { padding: 12px 28px; font-size: 14px; }
+
+            .track-info .track-name { font-size: 14px; }
+            .track-info .track-artist { font-size: 12px; }
+
+            /* Защита от перекрытия нижней панелью */
+            .book {
+                padding-bottom: 80px;
+            }
         }
 
         @media (max-width: 380px) {
-            .video-wrapper { max-width: 180px; }
-            .page-letter .btn-next { padding: 14px 30px; font-size: 18px; }
+            .video-wrapper { max-width: 150px; }
+            .envelope { width: 90px; height: 70px; }
+            .apple-btn { padding: 12px 24px; font-size: 14px; }
+            .page { padding: 20px 14px; min-height: 380px; }
+
+            .book {
+                padding-bottom: 100px;
+            }
+        }
+
+        /* Дополнительная защита для очень маленьких экранов */
+        @media (max-height: 700px) {
+            .video-wrapper { max-width: 140px; }
+            .page { padding: 16px 12px; min-height: 340px; }
+            .page-letter h2 { font-size: 20px; }
+            .page-greeting h1 { font-size: 18px; }
+            .envelope { width: 80px; height: 60px; margin-bottom: 12px; }
+            .candle { height: 36px; }
+            .candle .flame { height: 14px; width: 10px; top: -12px; }
+            .candle-container { margin: 2px 0 6px; }
+            .audio-player { max-width: 260px; }
+
+            .book {
+                padding-bottom: 70px;
+            }
         }
 
         /* =============================================
-           ЛЕТАЮЩИЕ СЕРДЕЧКИ
+           ЗОЛОТЫЕ СЕРДЕЧКИ
            ============================================= */
         .hearts-container {
             position: fixed;
@@ -315,49 +594,65 @@
 
         .heart {
             position: absolute;
-            color: rgba(255, 0, 43, 0.2);
-            font-size: 20px;
+            color: rgba(255, 4, 180, 0.15);
+            font-size: 18px;
             animation: floatHeart linear infinite;
             opacity: 0;
         }
 
         @keyframes floatHeart {
-            0% { transform: translateY(100vh) scale(0.4); opacity: 0; }
-            12% { opacity: 0.8; }
-            88% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0.3) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.8; }
+            85% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ЛЕТАЮЩИЕ СЕРДЕЧКИ ===== -->
+    <!-- ===== ЗОЛОТЫЕ СЕРДЕЧКИ ===== -->
     <div class="hearts-container" id="heartsContainer"></div>
 
     <!-- ===== КНИГА-ОТКРЫТКА ===== -->
     <div class="book">
 
-        <!-- СТРАНИЦА 1: ПИСЬМО -->
+        <!-- СТРАНИЦА 1: КОНВЕРТ -->
         <div class="page page-letter active" id="page1">
+            <div class="envelope" id="envelope">
+                <div class="seal"></div>
+            </div>
             <div class="letter-icon">✉️</div>
             <h2>Привет, Мама!</h2>
             <div class="typewriter-text" id="typewriterText"></div>
-            <button class="btn-next" id="nextBtn">➡️ Открыть сюрприз</button>
+            <button class="apple-btn" id="nextBtn">➡️ Открыть сюрприз</button>
         </div>
 
         <!-- СТРАНИЦА 2: ОТКРЫТКА -->
         <div class="page page-greeting" id="page2">
-            <h1>🌹С Днём Рождения, Мама!🌹</h1>
+            <h1>🌹 С Днём Рождения, Мама! 🌹</h1>
 
-            <!-- ВИДЕО 9:16 (MP4) -->
+            <!-- ВИДЕО -->
             <div class="video-wrapper">
                 <video src="video.mp4" autoplay muted loop playsinline></video>
             </div>
 
+            <!-- СВЕЧА -->
+            <div class="candle-container" id="candleContainer">
+                <div class="candle" id="candle">
+                    <div class="wick"></div>
+                    <div class="flame" id="flame"></div>
+                </div>
+                <div class="candle-label">Загадай желание, и нажми на свечу 🕯️</div>
+            </div>
+            <div class="wish-message" id="wishMessage">✨ Желание записано! ✨</div>
+
             <div class="greeting-text" id="greetingText"></div>
 
-            <!-- ПЛЕЕР КАК В APPLE MUSIC / SPOTIFY -->
+            <!-- ПЛЕЕР + ИНФОРМАЦИЯ О ПЕСНЕ -->
             <div class="audio-player" id="audioPlayer">
+                <div class="cover" id="cover">
+                    <img src="https://i.pinimg.com/736x/b4/ce/a6/b4cea66134e0cfbef4053a0c48a9304e.jpg" alt="Обложка">
+                </div>
                 <button id="playBtn">▶</button>
                 <div class="player-controls">
                     <div class="progress-bar" id="progressBar">
@@ -367,18 +662,23 @@
                 </div>
             </div>
 
-            <!-- КНОПКА ЗАНОВО -->
-            <button class="restart-btn" id="restartBtn">🔄 Открыть с начала</button>
+            <!-- НАЗВАНИЕ И ИСПОЛНИТЕЛЬ ПЕСНИ -->
+            <div class="track-info">
+                <div class="track-name">Мама Света</div>
+                <div class="track-artist">Трофим</div>
+            </div>
+
+            <button class="apple-btn-outline" id="restartBtn">🔄 Открыть с начала</button>
         </div>
 
     </div>
 
     <!-- ===== СКРИПТЫ ===== -->
     <script>
-        // =====================================================
-        // 1. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ
-        // =====================================================
-        function typeWriter(element, text, speed = 30, callback) {
+        // =============================================
+        // 1. ПЕЧАТНАЯ МАШИНКА
+        // =============================================
+        function typeWriter(element, text, speed = 25, callback) {
             element.textContent = '';
             let i = 0;
             const timer = setInterval(() => {
@@ -392,32 +692,45 @@
             }, speed);
         }
 
-        const letterText = 'Сегодня 01.07.2026 а это значит сегодня у тебя День рождения, и я приготовил для тебя небольшой сюрприз. Листай дальше — там всё самое главное.';
-        const greetingText = 'Мамочка, спасибо за твою любовь и тепло.\nТы — самый светлый и родной человек в моей жизни. ❤️\n\nС любовью, твой Трофим';
+        const letterText = 'Сегодня 01.07.2026а это значит у тебя сегодня День Рождения, и я приготовил для тебя маленький сюрприз. Листай дальше — там всё самое главное.';
+        const greetingText = 'Мама, спасибо за твою любовь и тепло.\nТы — самый светлый и родной человек в нашей жизни. ❤️\n\nС любовью, твои Женя и Трофим';
 
         const typewriterElement = document.getElementById('typewriterText');
         const greetingElement = document.getElementById('greetingText');
 
         window.addEventListener('load', () => {
-            typeWriter(typewriterElement, letterText, 25);
+            typeWriter(typewriterElement, letterText, 20);
         });
 
-        // =====================================================
-        // 2. ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ (С 3D-ЭФФЕКТОМ)
-        // =====================================================
+        // =============================================
+        // 2. КОНВЕРТ
+        // =============================================
+        const envelope = document.getElementById('envelope');
+        envelope.addEventListener('click', () => {
+            envelope.classList.toggle('open');
+            setTimeout(() => {
+                envelope.style.opacity = '0';
+                setTimeout(() => {
+                    envelope.style.display = 'none';
+                }, 300);
+            }, 600);
+        });
+
+        // =============================================
+        // 3. ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+        // =============================================
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
         const nextBtn = document.getElementById('nextBtn');
         const restartBtn = document.getElementById('restartBtn');
         let isFlipping = false;
-        let isSecondPageActive = false;
 
         function goToPage(pageNumber) {
             if (isFlipping) return;
             isFlipping = true;
 
             if (pageNumber === 2) {
-                page1.style.transform = 'rotateY(-20deg) scale(0.9)';
+                page1.style.transform = 'rotateY(-15deg) scale(0.95)';
                 page1.style.opacity = '0';
                 setTimeout(() => {
                     page1.classList.remove('active');
@@ -428,11 +741,10 @@
                 page2.classList.add('active');
                 page2.style.transform = 'rotateY(0deg) scale(1)';
                 page2.style.opacity = '1';
-                isSecondPageActive = true;
 
                 setTimeout(() => {
-                    typeWriter(greetingElement, greetingText, 20);
-                }, 500);
+                    typeWriter(greetingElement, greetingText, 18);
+                }, 400);
 
                 createHearts();
 
@@ -440,12 +752,13 @@
                     audio.play().catch(() => {});
                     playBtn.textContent = '⏸';
                     isPlaying = true;
+                    document.getElementById('cover').classList.add('spin');
                 }
 
                 setTimeout(() => { isFlipping = false; }, 700);
 
             } else {
-                page2.style.transform = 'rotateY(15deg) scale(0.9)';
+                page2.style.transform = 'rotateY(15deg) scale(0.95)';
                 page2.style.opacity = '0';
                 setTimeout(() => {
                     page2.classList.remove('active');
@@ -456,7 +769,6 @@
                 page1.classList.add('active');
                 page1.style.transform = 'rotateY(0deg) scale(1)';
                 page1.style.opacity = '1';
-                isSecondPageActive = false;
 
                 stopHearts = true;
 
@@ -464,9 +776,13 @@
                     audio.pause();
                     playBtn.textContent = '▶';
                     isPlaying = false;
+                    document.getElementById('cover').classList.remove('spin');
                 }
 
                 greetingElement.textContent = '';
+                document.getElementById('wishMessage').classList.remove('show');
+                document.getElementById('flame').classList.remove('out');
+
                 setTimeout(() => { isFlipping = false; }, 700);
             }
         }
@@ -474,23 +790,43 @@
         nextBtn.addEventListener('click', () => goToPage(2));
         restartBtn.addEventListener('click', () => goToPage(1));
 
-        // =====================================================
-        // 3. МУЗЫКА
-        // =====================================================
+        // =============================================
+        // 4. СВЕЧА
+        // =============================================
+        const candleContainer = document.getElementById('candleContainer');
+        const flame = document.getElementById('flame');
+        const wishMessage = document.getElementById('wishMessage');
+
+        candleContainer.addEventListener('click', () => {
+            if (!flame.classList.contains('out')) {
+                flame.classList.add('out');
+                wishMessage.classList.add('show');
+                setTimeout(() => {
+                    wishMessage.style.opacity = '1';
+                }, 300);
+            }
+        });
+
+        // =============================================
+        // 5. МУЗЫКА
+        // =============================================
         const audio = new Audio('song.mp3');
         const playBtn = document.getElementById('playBtn');
         const progressFill = document.getElementById('progressFill');
         const progressBar = document.getElementById('progressBar');
         const timeDisplay = document.getElementById('timeDisplay');
+        const cover = document.getElementById('cover');
         let isPlaying = false;
 
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
                 playBtn.textContent = '▶';
+                cover.classList.remove('spin');
             } else {
                 audio.play().catch(() => {});
                 playBtn.textContent = '⏸';
+                cover.classList.add('spin');
             }
             isPlaying = !isPlaying;
         }
@@ -514,11 +850,12 @@
         audio.addEventListener('ended', () => {
             playBtn.textContent = '▶';
             isPlaying = false;
+            cover.classList.remove('spin');
         });
 
-        // =====================================================
-        // 4. ЛЕТАЮЩИЕ СЕРДЕЧКИ
-        // =====================================================
+        // =============================================
+        // 6. ЗОЛОТЫЕ СЕРДЕЧКИ
+        // =============================================
         const heartsContainer = document.getElementById('heartsContainer');
         let heartInterval = null;
         let stopHearts = false;
@@ -535,21 +872,18 @@
                 heart.className = 'heart';
                 heart.textContent = '♥';
                 heart.style.left = Math.random() * 100 + '%';
-                heart.style.fontSize = (16 + Math.random() * 20) + 'px';
-                heart.style.animationDuration = (8 + Math.random() * 10) + 's';
-                heart.style.animationDelay = (Math.random() * 2) + 's';
+                heart.style.fontSize = (14 + Math.random() * 20) + 'px';
+                heart.style.animationDuration = (8 + Math.random() * 12) + 's';
+                heart.style.animationDelay = (Math.random() * 3) + 's';
                 heartsContainer.appendChild(heart);
                 setTimeout(() => {
                     if (heart.parentNode) heart.remove();
-                }, 18000);
-            }, 400);
+                }, 20000);
+            }, 500);
         }
 
-        // =====================================================
-        // 5. ПОДСКАЗКА
-        // =====================================================
-        console.log('✨ Открытка готова!');
-        console.log('📸 Добавьте video.mp4 (видео 9:16) и song.mp3 в ту же папку.');
+        console.log('✨ Открытка с жидким стеклом и кнопками Apple готова!');
+        console.log('📸 Добавьте video.mp4 и song.mp3 в ту же папку.');
         console.log('🌹 С Днём Рождения, Мама!');
     </script>
 </body>
