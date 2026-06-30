@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днём Рождения, Мама! 🌹</title>
+    <style>
+        /* =============================================
+           СБРОС ОТСТУПОВ
+           ============================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5eee8;
+            padding: 20px;
+            overflow: hidden;
+            background-image: url('https://i.pinimg.com/736x/6f/31/a0/6f31a05b7731aa34841df1054ad7a152.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* =============================================
+           КОНТЕЙНЕР-КНИГА
+           ============================================= */
+        .book {
+            max-width: 480px;
+            width: 100%;
+            perspective: 1500px;
+            position: relative;
+        }
+
+        /* =============================================
+           СТРАНИЦЫ (ОБЩИЕ СТИЛИ)
+           ============================================= */
+        .page {
+            background: rgba(255, 250, 240, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 35px 25px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25),
+                        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.5s ease;
+            opacity: 0;
+            transform: rotateY(15deg) scale(0.95);
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 190, 0.3);
+            backface-visibility: hidden;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: rotateY(0deg) scale(1);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* =============================================
+           ПЕРВАЯ СТРАНИЦА (письмо)
+           ============================================= */
+        .page-letter .letter-icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        .page-letter h2 {
+            font-size: 32px;
+            color: #5a3d35;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+        }
+
+        .page-letter .typewriter-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #4e342e;
+            max-width: 380px;
+            margin: 0 auto 30px;
+            min-height: 90px;
+            font-family: 'Georgia', serif;
+        }
+
+        .page-letter .btn-next {
+            background: linear-gradient(145deg, #e8c9b0, #dbb594);
+            color: #4a2e26;
+            border: none;
+            padding: 18px 48px;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(190, 140, 110, 0.3);
+            font-family: inherit;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .page-letter .btn-next:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(190, 140, 110, 0.4);
+            background: linear-gradient(145deg, #f0d5bc, #e0c0a5);
+        }
+
+        /* =============================================
+           ВТОРАЯ СТРАНИЦА (открытка)
+           ============================================= */
+        .page-greeting h1 {
+            font-size: 26px;
+            color: #6d4c41;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* --- КОНТЕЙНЕР ДЛЯ ВИДЕО 9:16 --- */
+        .video-wrapper {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 9 / 16;
+            margin: 10px auto 20px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2),
+                        0 0 0 3px rgba(255, 255, 255, 0.5) inset;
+            background: #f0e8e0;
+            position: relative;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .page-greeting .greeting-text {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #4e342e;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            min-height: 80px;
+            font-family: 'Georgia', serif;
+        }
+
+        .page-greeting .greeting-text strong {
+            color: #b56576;
+        }
+
+        /* =============================================
+           ПЛЕЕР В СТИЛЕ APPLE MUSIC / SPOTIFY
+           ============================================= */
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 248, 240, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 8px 18px 8px 12px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .audio-player button {
+            background: #e8ddd0;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            flex-shrink: 0;
+        }
+
+        .audio-player button:hover {
+            background: #dccfc0;
+            transform: scale(1.04);
+        }
+
+        .audio-player .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .audio-player .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(100, 70, 60, 0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            min-width: 60px;
+        }
+
+        .audio-player .progress-bar .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #c9a58b, #b5856a);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .audio-player .time {
+            font-size: 13px;
+            color: #7a5a4a;
+            min-width: 38px;
+            font-variant-numeric: tabular-nums;
+            font-family: 'Georgia', serif;
+        }
+
+        /* =============================================
+           КНОПКА "ОТКРЫТЬ С НАЧАЛА"
+           ============================================= */
+        .restart-btn {
+            background: rgba(200, 170, 150, 0.2);
+            color: #5a3d35;
+            border: 1px solid rgba(200, 170, 150, 0.3);
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            backdrop-filter: blur(4px);
+            margin-top: 15px;
+        }
+
+        .restart-btn:hover {
+            background: rgba(200, 170, 150, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* =============================================
+           АНИМАЦИИ
+           ============================================= */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        /* =============================================
+           АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ
+           ============================================= */
+        @media (max-width: 480px) {
+            .page {
+                padding: 25px 18px;
+                min-height: 500px;
+                border-radius: 24px;
+            }
+            .page-letter h2 { font-size: 26px; }
+            .page-letter .typewriter-text { font-size: 16px; }
+            .page-greeting h1 { font-size: 22px; }
+            .page-greeting .greeting-text { font-size: 15px; }
+            .video-wrapper { max-width: 220px; }
+            .audio-player { padding: 6px 14px 6px 10px; }
+            .audio-player button { width: 38px; height: 38px; font-size: 18px; }
+        }
+
+        @media (max-width: 380px) {
+            .video-wrapper { max-width: 180px; }
+            .page-letter .btn-next { padding: 14px 30px; font-size: 18px; }
+        }
+
+        /* =============================================
+           ЛЕТАЮЩИЕ СЕРДЕЧКИ
+           ============================================= */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 0, 43, 0.2);
+            font-size: 20px;
+            animation: floatHeart linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) scale(0.4); opacity: 0; }
+            12% { opacity: 0.8; }
+            88% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ЛЕТАЮЩИЕ СЕРДЕЧКИ ===== -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- ===== КНИГА-ОТКРЫТКА ===== -->
+    <div class="book">
+
+        <!-- СТРАНИЦА 1: ПИСЬМО -->
+        <div class="page page-letter active" id="page1">
+            <div class="letter-icon">✉️</div>
+            <h2>Привет, Мама!</h2>
+            <div class="typewriter-text" id="typewriterText"></div>
+            <button class="btn-next" id="nextBtn">➡️ Открыть сюрприз</button>
+        </div>
+
+        <!-- СТРАНИЦА 2: ОТКРЫТКА -->
+        <div class="page page-greeting" id="page2">
+            <h1>🌹С Днём Рождения, Мама!🌹</h1>
+
+            <!-- ВИДЕО 9:16 (MP4) -->
+            <div class="video-wrapper">
+                <video src="video.mp4" autoplay muted loop playsinline></video>
+            </div>
+
+            <div class="greeting-text" id="greetingText"></div>
+
+            <!-- ПЛЕЕР КАК В APPLE MUSIC / SPOTIFY -->
+            <div class="audio-player" id="audioPlayer">
+                <button id="playBtn">▶</button>
+                <div class="player-controls">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="time" id="timeDisplay">0:00</span>
+                </div>
+            </div>
+
+            <!-- КНОПКА ЗАНОВО -->
+            <button class="restart-btn" id="restartBtn">🔄 Открыть с начала</button>
+        </div>
+
+    </div>
+
+    <!-- ===== СКРИПТЫ ===== -->
+    <script>
+        // =====================================================
+        // 1. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ
+        // =====================================================
+        function typeWriter(element, text, speed = 30, callback) {
+            element.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
+        const letterText = 'Сегодня 01.07.2026 а это значит сегодня у тебя День рождения, и я приготовил для тебя небольшой сюрприз. Листай дальше — там всё самое главное.';
+        const greetingText = 'Мамочка, спасибо за твою любовь и тепло.\nТы — самый светлый и родной человек в моей жизни. ❤️\n\nС любовью, твой Трофим';
+
+        const typewriterElement = document.getElementById('typewriterText');
+        const greetingElement = document.getElementById('greetingText');
+
+        window.addEventListener('load', () => {
+            typeWriter(typewriterElement, letterText, 25);
+        });
+
+        // =====================================================
+        // 2. ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ (С 3D-ЭФФЕКТОМ)
+        // =====================================================
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const nextBtn = document.getElementById('nextBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        let isFlipping = false;
+        let isSecondPageActive = false;
+
+        function goToPage(pageNumber) {
+            if (isFlipping) return;
+            isFlipping = true;
+
+            if (pageNumber === 2) {
+                page1.style.transform = 'rotateY(-20deg) scale(0.9)';
+                page1.style.opacity = '0';
+                setTimeout(() => {
+                    page1.classList.remove('active');
+                    page1.style.transform = '';
+                    page1.style.opacity = '';
+                }, 500);
+
+                page2.classList.add('active');
+                page2.style.transform = 'rotateY(0deg) scale(1)';
+                page2.style.opacity = '1';
+                isSecondPageActive = true;
+
+                setTimeout(() => {
+                    typeWriter(greetingElement, greetingText, 20);
+                }, 500);
+
+                createHearts();
+
+                if (!isPlaying) {
+                    audio.play().catch(() => {});
+                    playBtn.textContent = '⏸';
+                    isPlaying = true;
+                }
+
+                setTimeout(() => { isFlipping = false; }, 700);
+
+            } else {
+                page2.style.transform = 'rotateY(15deg) scale(0.9)';
+                page2.style.opacity = '0';
+                setTimeout(() => {
+                    page2.classList.remove('active');
+                    page2.style.transform = '';
+                    page2.style.opacity = '';
+                }, 500);
+
+                page1.classList.add('active');
+                page1.style.transform = 'rotateY(0deg) scale(1)';
+                page1.style.opacity = '1';
+                isSecondPageActive = false;
+
+                stopHearts = true;
+
+                if (isPlaying) {
+                    audio.pause();
+                    playBtn.textContent = '▶';
+                    isPlaying = false;
+                }
+
+                greetingElement.textContent = '';
+                setTimeout(() => { isFlipping = false; }, 700);
+            }
+        }
+
+        nextBtn.addEventListener('click', () => goToPage(2));
+        restartBtn.addEventListener('click', () => goToPage(1));
+
+        // =====================================================
+        // 3. МУЗЫКА
+        // =====================================================
+        const audio = new Audio('song.mp3');
+        const playBtn = document.getElementById('playBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        let isPlaying = false;
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶';
+            } else {
+                audio.play().catch(() => {});
+                playBtn.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = percent + '%';
+            const minutes = Math.floor(audio.currentTime / 60);
+            const seconds = Math.floor(audio.currentTime % 60);
+            timeDisplay.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        });
+
+        audio.addEventListener('ended', () => {
+            playBtn.textContent = '▶';
+            isPlaying = false;
+        });
+
+        // =====================================================
+        // 4. ЛЕТАЮЩИЕ СЕРДЕЧКИ
+        // =====================================================
+        const heartsContainer = document.getElementById('heartsContainer');
+        let heartInterval = null;
+        let stopHearts = false;
+
+        function createHearts() {
+            stopHearts = false;
+            if (heartInterval) clearInterval(heartInterval);
+            heartInterval = setInterval(() => {
+                if (stopHearts) {
+                    clearInterval(heartInterval);
+                    return;
+                }
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '♥';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (16 + Math.random() * 20) + 'px';
+                heart.style.animationDuration = (8 + Math.random() * 10) + 's';
+                heart.style.animationDelay = (Math.random() * 2) + 's';
+                heartsContainer.appendChild(heart);
+                setTimeout(() => {
+                    if (heart.parentNode) heart.remove();
+                }, 18000);
+            }, 400);
+        }
+
+        // =====================================================
+        // 5. ПОДСКАЗКА
+        // =====================================================
+        console.log('✨ Открытка готова!');
+        console.log('📸 Добавьте video.mp4 (видео 9:16) и song.mp3 в ту же папку.');
+        console.log('🌹 С Днём Рождения, Мама!');
+    </script>
+</body>
+</html>
